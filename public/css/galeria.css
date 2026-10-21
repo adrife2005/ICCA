@@ -1,0 +1,561 @@
+/*==================================================================
+  1. CONFIGURACIÓN GENERAL Y REINICIO
+===================================================================*/
+/* Reset básico y protección global anti-copia */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  scroll-behavior: smooth;
+  
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+input, textarea {
+  -webkit-user-select: auto !important;
+  -moz-user-select: auto !important;
+  -ms-user-select: auto !important;
+  user-select: auto !important;
+}
+
+img {
+  -webkit-user-drag: none;
+  user-drag: none;
+  pointer-events: auto;
+}
+
+body {
+  background-color: #0b0b0b;
+  color: #ffffff;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+
+/*==================================================================
+  2. BARRA DE NAVEGACIÓN (Proporcionada)
+===================================================================*/
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.2rem 3rem;
+  background: rgba(18, 18, 18, 0.85);
+  backdrop-filter: blur(12px);
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1000;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+}
+
+.nav-links {
+  display: flex;
+  list-style: none;
+  gap: 2.5rem;
+}
+
+.nav-links a {
+  color: #cccccc;
+  text-decoration: none;
+  font-size: 1rem;
+  font-weight: 500;
+  transition: color 0.3s ease;
+  position: relative;
+}
+
+.nav-links a:hover,
+.nav-links a.active { 
+  color: #ffffff; 
+}
+
+.nav-links a::after {
+  content: '';
+  position: absolute;
+  bottom: -5px;
+  left: 0;
+  width: 0%;
+  height: 2px;
+  background-color: #8B0000;
+  transition: width 0.3s ease;
+}
+
+.nav-links a:hover::after,
+.nav-links a.active::after { 
+  width: 100%; 
+}
+
+.btn-contacto {
+  display: inline-block;
+  padding: 0.6rem 1.4rem;
+  border: 1px solid #8B0000;
+  color: #ffffff;
+  text-decoration: none;
+  font-size: 0.95rem;
+  font-weight: 600;
+  border-radius: 4px;
+  transition: all 0.3s ease;
+  background: rgba(139, 0, 0, 0.15);
+}
+
+.btn-contacto:hover {
+  background-color: #8B0000;
+  color: #ffffff;
+  box-shadow: 0 0 15px rgba(139, 0, 0, 0.5);
+}
+
+.nav-toggle {
+  display: none;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 25px;
+  height: 18px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+}
+
+.nav-toggle span {
+  width: 100%;
+  height: 2px;
+  background-color: #ffffff;
+  transition: all 0.3s ease;
+}
+
+.interactive-word {
+  font-size: 2rem;
+  font-weight: 800;
+  display: flex;
+  gap: 0.15rem;
+  user-select: none;
+  letter-spacing: 2px;
+}
+
+.letter {
+  display: inline-block;
+  color: #ffffff;
+  transition: color 0.3s ease, transform 0.3s ease, text-shadow 0.3s ease;
+  cursor: pointer;
+}
+
+.letter.active {
+  animation: bounce 0.5s ease infinite alternate;
+  color: #841919;
+}
+
+@keyframes bounce {
+  0% { transform: translateY(0) scale(1); }
+  100% { transform: translateY(-8px) scale(1.15); }
+}
+
+@media (max-width: 768px) {
+  .navbar { padding: 1rem 1.5rem; }
+  .nav-links {
+    position: fixed;
+    top: 70px;
+    left: -100%;
+    flex-direction: column;
+    background: rgba(18, 18, 18, 0.98);
+    width: 100%;
+    padding: 2rem;
+    gap: 1.5rem;
+    text-align: center;
+    transition: left 0.3s ease;
+    border-bottom: 1px solid rgba(139, 0, 0, 0.3);
+  }
+  .nav-links.show { left: 0; }
+  .nav-contact { display: none; }
+  .nav-toggle { display: flex; }
+}
+
+/*==================================================================
+  3. LIENZO EXTENDIDO DE GALERÍA CON SCROLL VERTICAL
+===================================================================*/
+.gallery-viewport {
+  position: relative;
+  width: 100vw;
+  min-height: 2200px; /* ESPACIO EXTENDIDO PARA PODER SCROLLEAR HACIA ABAJO */
+  background: radial-gradient(circle at 50% 15%, #221518 0%, #0d0d0d 60%);
+  background-attachment: fixed;
+  padding-top: 120px;
+  overflow: hidden;
+}
+
+.nav-boundary-line {
+  position: fixed;
+  top: 80px;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, rgba(139, 0, 0, 0.4), transparent);
+  pointer-events: none;
+  z-index: 900;
+}
+
+.instruction-banner {
+  position: fixed; /* Se mantiene visible en pantalla */
+  top: 95px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(0, 0, 0, 0.75);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(212, 175, 55, 0.3);
+  color: rgba(253, 230, 138, 0.95);
+  font-size: 0.75rem;
+  padding: 6px 16px;
+  border-radius: 50px;
+  pointer-events: none;
+  z-index: 850;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  white-space: nowrap;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.6);
+}
+
+/* MARCOS DE ARTE MÁS COMPACTOS Y ELEGANTES */
+.art-frame {
+  position: absolute;
+  padding: 8px 8px 12px 8px;
+  background: linear-gradient(145deg, #2b2219, #17110c);
+  border: 4px solid #a67c1e;
+  border-image: linear-gradient(to bottom right, #d4af37, #59410f, #e6ca65, #3b2b0a) 1;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.8), 0 0 10px rgba(139, 0, 0, 0.2);
+  border-radius: 4px;
+  cursor: grab;
+  touch-action: none;
+  transition: transform 0.15s cubic-bezier(0.2, 0, 0.1, 1), box-shadow 0.2s ease, filter 0.3s ease;
+  width: 160px; /* TAMAÑO REDUCIDO */
+  will-change: transform, top, left;
+}
+
+.art-frame:hover {
+  box-shadow: 0 15px 35px rgba(139, 0, 0, 0.4), 0 0 15px rgba(212, 175, 55, 0.3);
+  filter: brightness(1.08);
+}
+
+.art-frame:active, 
+.art-frame.is-dragging {
+  cursor: grabbing;
+  transform: scale(1.06) rotate(0deg) !important;
+  box-shadow: 0 20px 45px rgba(0, 0, 0, 0.9), 0 0 25px rgba(139, 0, 0, 0.6);
+  z-index: 999 !important;
+}
+
+.art-image-container {
+  position: relative;
+  overflow: hidden;
+  background: #000;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.art-img {
+  width: 100%;
+  height: 140px; /* IMAGEN MÁS RECOGIDA */
+  object-fit: cover;
+  display: block;
+  pointer-events: none;
+}
+
+.art-caption {
+  margin-top: 6px;
+  text-align: center;
+}
+
+.art-title-tag {
+  font-family: 'Playfair Display', serif;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: #f3e5ab;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.art-artist-tag {
+  font-size: 0.65rem;
+  color: #a0a0a0;
+}
+
+.badge-explored {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  background: #8B0000;
+  color: #fff;
+  font-size: 0.6rem;
+  padding: 2px 5px;
+  border-radius: 10px;
+  border: 1px solid #D4AF37;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.5);
+}
+
+/*==================================================================
+  4. BARRA DE HERRAMIENTAS FLOTANTE
+===================================================================*/
+.toolbar-container {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 950;
+  background: rgba(18, 18, 18, 0.88);
+  backdrop-filter: blur(16px);
+  border: 1px solid rgba(212, 175, 55, 0.3);
+  border-radius: 50px;
+  padding: 8px 20px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8);
+  max-width: 92vw;
+  overflow-x: auto;
+}
+
+.tool-btn {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: #e0e0e0;
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 0.82rem;
+  font-weight: 500;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  white-space: nowrap;
+  transition: all 0.25s ease;
+}
+
+.tool-btn:hover, 
+.tool-btn.active {
+  background: #8B0000;
+  color: #fff;
+  border-color: #D4AF37;
+  box-shadow: 0 0 10px rgba(139, 0, 0, 0.5);
+}
+
+.counter-pill {
+  background: rgba(139, 0, 0, 0.3);
+  border: 1px solid #8B0000;
+  color: #D4AF37;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+/*==================================================================
+  5. MODAL DIDÁCTICO, LUPA Y AUDIOGUÍA
+===================================================================*/
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(5, 5, 5, 0.92);
+  backdrop-filter: blur(12px);
+  z-index: 2000;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.35s ease;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+}
+
+.modal-overlay.open {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.modal-card {
+  background: #141414;
+  border: 1px solid rgba(212, 175, 55, 0.3);
+  border-radius: 12px;
+  max-width: 1000px;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 25px 70px rgba(0, 0, 0, 0.9);
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  position: relative;
+}
+
+@media (max-width: 850px) {
+  .modal-card {
+    grid-template-columns: 1fr;
+    max-height: 94vh;
+  }
+}
+
+.modal-close-btn {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  z-index: 20;
+  color: #9ca3af;
+  background: rgba(0, 0, 0, 0.6);
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: 9999px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #374151;
+  transition: color 0.2s;
+  cursor: pointer;
+}
+
+.modal-close-btn:hover {
+  color: #ffffff;
+}
+
+.modal-img-wrapper {
+  position: relative;
+  background: #080808;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 25px;
+  overflow: hidden;
+  border-right: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.modal-main-img {
+  max-width: 100%;
+  max-height: 65vh;
+  object-fit: contain;
+  border-radius: 4px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+  cursor: zoom-in;
+}
+
+.zoom-lens {
+  position: absolute;
+  border: 2px solid #D4AF37;
+  border-radius: 50%;
+  width: 130px;
+  height: 130px;
+  pointer-events: none;
+  display: none;
+  box-shadow: 0 0 15px rgba(0,0,0,0.8);
+  background-repeat: no-repeat;
+  z-index: 10;
+}
+
+.zoom-hint {
+  position: absolute;
+  bottom: 0.75rem;
+  left: 0.75rem;
+  background: rgba(0, 0, 0, 0.8);
+  color: #d1d5db;
+  font-size: 11px;
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+  border: 1px solid #1f2937;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  pointer-events: none;
+}
+
+.modal-content {
+  padding: 28px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.audio-player-card {
+  background-color: rgba(28, 25, 23, 0.9);
+  border: 1px solid rgba(120, 53, 15, 0.4);
+  padding: 0.875rem;
+  border-radius: 0.5rem;
+  margin-bottom: 1.25rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.audio-play-btn {
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 9999px;
+  background-color: #991b1b;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.875rem;
+  transition: background-color 0.2s;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
+  flex-shrink: 0;
+  border: none;
+  cursor: pointer;
+}
+
+.audio-play-btn:hover {
+  background-color: #b91c1c;
+}
+
+.eq-bar {
+  width: 3px;
+  background-color: #D4AF37;
+  animation: eq 1s ease-in-out infinite alternate;
+  animation-play-state: paused;
+}
+
+.eq-bar.playing {
+  animation-play-state: running;
+}
+
+@keyframes eq {
+  0% { height: 3px; }
+  100% { height: 16px; }
+}
+
+.tab-btn {
+  color: #aaa;
+  border-bottom: 2px solid transparent;
+  padding-bottom: 6px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  background: transparent;
+  border-top: none;
+  border-left: none;
+  border-right: none;
+  transition: all 0.2s;
+}
+
+.tab-btn.active {
+  color: #D4AF37;
+  border-bottom-color: #8B0000;
+}
+
+.modal-nav-btn {
+  padding: 0.375rem 0.75rem;
+  background-color: #292524;
+  border-radius: 0.25rem;
+  font-size: 0.75rem;
+  color: #d1d5db;
+  transition: background-color 0.2s;
+  border: none;
+  cursor: pointer;
+}
+
+.modal-nav-btn:hover {
+  background-color: #44403c;
+}
