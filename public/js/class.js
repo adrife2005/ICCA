@@ -167,10 +167,10 @@ function initSecurityProtections() {
     }, 3000);
   }
 
-  document.addEventListener('contextmenu', (e) => {
-    e.preventDefault();
-    showToast('🔒 Clic derecho desactivado por derechos de autor.');
-  });
+  // document.addEventListener('contextmenu', (e) => {
+  //   e.preventDefault();
+  //   showToast('🔒 Clic derecho desactivado por derechos de autor.');
+  // });
 
   document.addEventListener('dragstart', (e) => {
     if (e.target.tagName === 'IMG') {

@@ -302,8 +302,8 @@ const server = http.createServer(async (req, res) => {
     console.log('  Cámbiala desde el dashboard → Cuenta.');
     console.log('────────────────────────────────────────────────\n');
   }
-  server.listen(cfg.PORT, () => {
-    console.log(`Sitio:      http://localhost:${cfg.PORT}`);
-    console.log(`Dashboard:  http://localhost:${cfg.PORT}/admin`);
+  server.listen(3002, () => {
+    console.log(`Sitio:      http://localhost:3002`);
+    console.log(`Dashboard:  http://localhost:3002/admin`);
   });
 })();

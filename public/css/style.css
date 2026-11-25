@@ -377,7 +377,7 @@ body {
 .mini-gallery-section {
   position: relative;
   z-index: 20;
-  background-color: #0b0b0b;
+  backdrop-filter: blur(16px);
   padding: 6rem 4rem 2rem 4rem;
   max-width: 1400px;
   margin: 0 auto;
@@ -584,10 +584,10 @@ body {
 .info-cards-section {
   position: relative;
   z-index: 20;
-  background-color: #0b0b0b;
+  backdrop-filter: blur(16px);
   padding: 4rem 4rem 6rem 4rem;
   max-width: 1250px;
-  margin: 0 auto;
+  margin: 3rem auto;
 }
 
 .info-header {
@@ -724,10 +724,10 @@ body {
 .scratch-section {
   position: relative;
   z-index: 20;
-  background-color: #0b0b0b;
+  backdrop-filter: blur(16px);
   padding: 6rem 4rem 6rem 4rem;
   max-width: 1300px;
-  margin: 0 auto;
+  margin: 3rem auto;
 }
 
 .scratch-container {
@@ -847,10 +847,10 @@ body {
 .contact-section {
   position: relative;
   z-index: 20;
-  background-color: #0b0b0b;
+  backdrop-filter: blur(16px);
   padding: 6rem 4rem 8rem 4rem;
   max-width: 1300px;
-  margin: 0 auto;
+  margin: 3rem auto;
 }
 
 .contact-header {
